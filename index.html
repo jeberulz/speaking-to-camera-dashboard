@@ -83,6 +83,31 @@ label{font-weight:700;font-size:.9rem;display:block;margin:14px 0 6px}
 .footer{margin-top:10px;padding:18px;border-radius:16px;background:var(--surface2);font-size:.92rem}
 .flex{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .mt{margin-top:14px}
+/* --- Navigation: sticky top bar (all screens) + sticky bottom bar (mobile) --- */
+section[id]{scroll-margin-top:76px}
+.topnav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.topnav-inner{max-width:1120px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:18px}
+.topnav-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink);font-weight:800;white-space:nowrap}
+.topnav-brand .logo{width:34px;height:34px;border-radius:10px;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.topnav-brand small{display:block;font-size:.68rem;color:var(--muted);font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.topnav-links{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.topnav-links::-webkit-scrollbar{display:none}
+.topnav-links a{padding:8px 12px;border-radius:999px;text-decoration:none;color:var(--muted);font-weight:700;font-size:.9rem;white-space:nowrap}
+.topnav-links a:hover{color:var(--ink);background:var(--surface2)}
+.topnav-links a.active{background:var(--ink);color:var(--bg)}
+.topnav-progress{flex:0 0 auto;font-size:.82rem;font-weight:800;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:6px 10px;white-space:nowrap}
+.bottomnav{display:none}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:8px}
+@media(max-width:820px){
+  .topnav-links{display:none}
+  .topnav-progress{margin-left:auto}
+  .wrap{padding-bottom:96px}
+  .bottomnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--surface);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom));box-shadow:0 -6px 24px rgba(90,50,10,.10)}
+  .bottomnav a{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px 6px;text-decoration:none;color:var(--muted);font-size:.68rem;font-weight:800;min-height:48px;justify-content:center;border-radius:12px}
+  .bottomnav a .ico{font-size:1.25rem;line-height:1}
+  .bottomnav a.active{color:var(--accent)}
+  .bottomnav a.active .ico{transform:scale(1.15)}
+}
 /* B-Roll in One Day */
 .broll-day{border:2px solid var(--accent2);margin-top:18px}
 .broll-top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
@@ -110,11 +135,32 @@ label{font-weight:700;font-size:.9rem;display:block;margin:14px 0 6px}
 .plan span{color:var(--muted)}.plan b{color:var(--ink)}
 .folder-tree{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82rem;line-height:1.65;background:var(--ink);color:var(--bg);border-radius:14px;padding:16px;overflow-x:auto;white-space:pre;margin-top:12px}
 .folder-tree i{opacity:.65;font-style:normal}
-@media(max-width:820px){.hero,.grid,.weeks{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.tracker{grid-template-columns:repeat(5,1fr)}.shots,.focus{grid-template-columns:1fr}.wrap{padding:14px 14px 36px}.steps,.broll-grid{grid-template-columns:1fr}.shotrow{flex-direction:column;align-items:flex-start}}
+@media(max-width:820px){.hero,.grid,.weeks{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.tracker{grid-template-columns:repeat(5,1fr)}.shots,.focus{grid-template-columns:1fr}.wrap{padding:14px 14px 120px}.steps,.broll-grid{grid-template-columns:1fr}.shotrow{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
 <body>
-<div class="wrap">
+<nav class="topnav" aria-label="Main navigation">
+  <div class="topnav-inner">
+    <a class="topnav-brand" href="#top" aria-label="Speaking to Camera dashboard — back to top"><span class="logo" aria-hidden="true">🎥</span><span>Speak to Camera<small>30-day dashboard</small></span></a>
+    <div class="topnav-links">
+      <a href="#todayCard" data-nav="todayCard">Today</a>
+      <a href="#trackerSection" data-nav="trackerSection">Tracker</a>
+      <a href="#weeksSection" data-nav="weeksSection">The Plan</a>
+      <a href="#promptsSection" data-nav="promptsSection">AI Prompts</a>
+      <a href="#ideasSection" data-nav="ideasSection">Idea Bank</a>
+      <a href="#brollDay" data-nav="brollDay">B-Roll</a>
+    </div>
+    <span class="topnav-progress" id="navProgress" title="Days completed">0 / 30 done</span>
+  </div>
+</nav>
+<nav class="bottomnav" aria-label="Mobile navigation">
+  <a href="#todayCard" data-nav="todayCard"><span class="ico" aria-hidden="true">☀️</span>Today</a>
+  <a href="#trackerSection" data-nav="trackerSection"><span class="ico" aria-hidden="true">✅</span>Tracker</a>
+  <a href="#weeksSection" data-nav="weeksSection"><span class="ico" aria-hidden="true">🗓️</span>Plan</a>
+  <a href="#ideasSection" data-nav="ideasSection"><span class="ico" aria-hidden="true">💡</span>Ideas</a>
+  <a href="#brollDay" data-nav="brollDay"><span class="ico" aria-hidden="true">🎬</span>B-Roll</a>
+</nav>
+<div class="wrap" id="top">
   <header class="hero">
     <div>
       <div class="eyebrow">Sir Rulz • 30-Day Mission</div>
@@ -157,7 +203,7 @@ label{font-weight:700;font-size:.9rem;display:block;margin:14px 0 6px}
       </section>
 
       <!-- TRACKER -->
-      <section class="card">
+      <section class="card" id="trackerSection">
         <div class="flex" style="justify-content:space-between"><h2>30-Day Tracker</h2><span class="pill teal">Tap a day to tick it off</span></div>
         <p class="small">Your progress saves in this browser and stays here when you come back. Miss a day? No drama — just pick up the next one.</p>
         <div class="tracker" id="tracker"></div>
@@ -165,7 +211,7 @@ label{font-weight:700;font-size:.9rem;display:block;margin:14px 0 6px}
       </section>
 
       <!-- WEEKS -->
-      <section class="card">
+      <section class="card" id="weeksSection">
         <h2>The 4 weeks, exactly as Gabe lays it out</h2>
         <div class="weeks mt">
           <article class="week"><span class="pill">WEEK 1</span><h3 class="mt">Getting Comfy</h3><p>Record every day. Post nothing.</p><ul><li>Every morning: set up camera, record a 10-min unscripted rant — your daily video journal</li><li>Watch it back, pick 1 thing for tomorrow</li><li>Gabe’s focus: eye contact &amp; filler words</li></ul></article>
@@ -197,7 +243,7 @@ label{font-weight:700;font-size:.9rem;display:block;margin:14px 0 6px}
 
     <div>
       <!-- ROUTINE + TIMER -->
-      <section class="card">
+      <section class="card" id="routineSection">
         <h2>Your daily 10-minute journal</h2>
         <p class="small">Every morning in Weeks 1–2 (and as a warm-up after). Unscripted. Unposted. Just you and the lens.</p>
         <ol style="margin:12px 0 0 18px;padding:0;font-size:.95rem">
@@ -212,7 +258,7 @@ label{font-weight:700;font-size:.9rem;display:block;margin:14px 0 6px}
       </section>
 
       <!-- AI PROMPTS -->
-      <section class="card">
+      <section class="card" id="promptsSection">
         <h2>AI interrogation prompts</h2>
         <p class="small">Open your AI in conversation / voice mode, paste a prompt, and let it interview <em>you</em>. Tailored for WeekendMVP.</p>
         <div id="prompts" class="mt"></div>
@@ -231,7 +277,7 @@ label{font-weight:700;font-size:.9rem;display:block;margin:14px 0 6px}
       </section>
 
       <!-- IDEA BANK -->
-      <section class="card">
+      <section class="card" id="ideasSection">
         <h2>💡 Idea bank &amp; notes</h2>
         <p class="small">Every AI session should end with 10 ideas. Drop them here so Week 3 filming is easy.</p>
         <label for="ideaInput">Add a content idea</label>
@@ -404,6 +450,7 @@ function render(){
   // if started later, also show run ending at cd-1
   document.getElementById('statStreak').textContent=streak+(streak===1?' day':' days');
   document.getElementById('statIdeas').textContent=state.ideas.length;
+  var np=document.getElementById('navProgress'); if(np) np.textContent=doneCount+' / 30 done';
   document.getElementById('ideaCount').textContent=state.ideas.length+' ideas saved';
   document.getElementById('startLabel').textContent=state.startDate?('Started '+new Date(state.startDate).toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'})+' — you are on Day '+cd):'Not started yet — Day 1 is waiting for you.';
   // today
@@ -450,6 +497,22 @@ document.getElementById('timerStart').onclick=function(){
   timerInt=setInterval(function(){ if(secs>0){secs--; showT();} else {clearInterval(timerInt); timerInt=null; disp.textContent='Done 🎉 Watch it back, pick ONE thing.'; document.getElementById('timerStart').textContent='Start 10-min timer'; secs=600;} },1000);
 };
 document.getElementById('timerReset').onclick=function(){clearInterval(timerInt); timerInt=null; secs=600; showT(); document.getElementById('timerStart').textContent='Start 10-min timer';};
+
+// Scrollspy: highlight the section you're in, in both navs
+var navSections=['todayCard','trackerSection','weeksSection','promptsSection','ideasSection','brollDay'];
+function setActiveNav(id){
+  document.querySelectorAll('[data-nav]').forEach(function(a){
+    var on=a.dataset.nav===id;
+    a.classList.toggle('active',on);
+    if(on) a.setAttribute('aria-current','true'); else a.removeAttribute('aria-current');
+  });
+}
+if('IntersectionObserver' in window){
+  var spy=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting) setActiveNav(e.target.id); });
+  },{rootMargin:'-70px 0px -55% 0px'});
+  navSections.forEach(function(id){var el=document.getElementById(id); if(el) spy.observe(el);});
+} else { setActiveNav('todayCard'); }
 render();
 </script>
 </body>

@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="light dark"/>
+<link rel="icon" href="data:,"/>
+<title>Speaking to Camera — 30-Day Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700;9..40,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFF8F0; --surface:#FFFFFF; --surface2:#FFF1DE; --surface3:#FFFBF5;
+  --ink:#1C1917; --muted:#6B5E52; --line:#EADBC8;
+  --accent:#E85D26; --accent2:#0F766E; --accent-soft:#FFE8D6; --gold:#D97706;
+  --radius:18px; --shadow:0 10px 30px rgba(90,50,10,.08);
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#131110;--surface:#1E1B19;--surface2:#2A2320;--surface3:#221E1B;--ink:#FFF7ED;--muted:#C4B5A5;--line:#3A332E;--accent:#FF7A45;--accent2:#2DD4BF;--accent-soft:#3D2317;--shadow:0 10px 30px rgba(0,0,0,.35)}
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;line-height:1.55}
+a{color:var(--accent2);font-weight:700}
+h1,h2,h3{line-height:1.05;margin:0}
+h1{font-family:"DM Serif Display",serif;font-weight:400;font-size:clamp(2.4rem,6vw,4.2rem);letter-spacing:-.02em}
+h2{font-size:1.45rem;letter-spacing:-.02em}
+h3{font-size:1.05rem}
+p{margin:.5rem 0}
+.wrap{max-width:1120px;margin:0 auto;padding:20px 18px 48px}
+.hero{padding:28px 0 8px;display:grid;grid-template-columns:1.35fr .65fr;gap:20px;align-items:start}
+.eyebrow{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:800}
+.lede{font-size:1.12rem;color:var(--muted);max-width:640px;margin-top:12px}
+.hero-card{background:var(--ink);color:var(--bg);border-radius:22px;padding:22px}
+.hero-card b{font-size:2.2rem;display:block;line-height:1}
+.hero-card span{opacity:.85;font-size:.9rem}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+.stat b{font-size:1.9rem;display:block;line-height:1}
+.stat span{color:var(--muted);font-size:.85rem;font-weight:600}
+.progress{height:10px;background:var(--surface2);border-radius:999px;overflow:hidden;margin-top:10px}
+.progress i{display:block;height:100%;background:var(--accent);width:0%;transition:width .4s}
+.grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px;align-items:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:18px}
+.today{border:2px solid var(--accent);background:linear-gradient(180deg,var(--surface),var(--surface3))}
+.today-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+.pill{display:inline-flex;padding:6px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-weight:800;font-size:.8rem}
+.pill.teal{background:#CCFBF1;color:#0F766E}
+@media(prefers-color-scheme:dark){.pill.teal{background:#134E4A;color:#5EEAD4}}
+.task-title{font-family:"DM Serif Display",serif;font-size:1.7rem;margin:12px 0 6px}
+.task-desc{color:var(--muted)}
+.checklist{list-style:none;padding:0;margin:14px 0}
+.checklist li{display:flex;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:var(--surface3);font-size:.95rem}
+.checklist li::before{content:"○";color:var(--accent);font-weight:900}
+.btn{appearance:none;border:0;border-radius:999px;padding:12px 18px;font-weight:800;cursor:pointer;background:var(--accent);color:white;font-size:.95rem}
+.btn.secondary{background:var(--surface2);color:var(--ink);border:1px solid var(--line)}
+.btn.teal{background:var(--accent2)}
+.btn:active{transform:scale(.98)}
+textarea,input[type=text]{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--surface3);color:var(--ink);font:inherit}
+label{font-weight:700;font-size:.9rem;display:block;margin:14px 0 6px}
+.tracker{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:14px}
+.day{aspect-ratio:1;border:1px solid var(--line);border-radius:14px;background:var(--surface3);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-weight:800;padding:4px;text-align:center}
+.day small{font-weight:600;color:var(--muted);font-size:.62rem;line-height:1.1}
+.day.done{background:var(--accent2);color:white;border-color:var(--accent2)}
+.day.done small{color:white;opacity:.9}
+.day.todayDay{outline:3px solid var(--accent);outline-offset:2px}
+.weeks{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.week{border:1px solid var(--line);border-radius:16px;padding:16px;background:var(--surface3)}
+.week h3{margin-bottom:6px}.week p,.week li{font-size:.92rem;color:var(--muted)}
+.week ul{margin:8px 0 0 18px;padding:0}
+.focus{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.focus-box{padding:14px;border-radius:14px;background:#FFF1DE;border:1px solid var(--line)}
+@media(prefers-color-scheme:dark){.focus-box{background:#2A2320}}
+.prompt{background:var(--surface3);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px}
+.prompt p{font-size:.93rem;color:var(--muted)}
+.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.shot{padding:14px;border-radius:14px;color:white}
+.shot.wide{background:#0F766E}.shot.med{background:#B45309}.shot.tight{background:#1C1917}
+.shot b{font-size:1.1rem}
+.idea{display:flex;justify-content:space-between;gap:10px;padding:11px 12px;border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:var(--surface3)}
+.idea button{border:0;background:transparent;color:var(--accent);font-weight:800;cursor:pointer}
+.timer{font-size:2.6rem;font-weight:800;letter-spacing:-.03em;text-align:center;margin:8px 0}
+.small{font-size:.88rem;color:var(--muted)}
+.footer{margin-top:10px;padding:18px;border-radius:16px;background:var(--surface2);font-size:.92rem}
+.flex{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.mt{margin-top:14px}
+/* B-Roll in One Day */
+.broll-day{border:2px solid var(--accent2);margin-top:18px}
+.broll-top{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:flex-start}
+.broll-title{font-family:"DM Serif Display",serif;font-size:clamp(1.8rem,3.5vw,2.4rem);font-weight:400;margin:8px 0 6px}
+.broll-quote{border-left:3px solid var(--accent);padding:10px 14px;background:var(--surface3);border-radius:0 12px 12px 0;color:var(--muted);font-size:.93rem;margin-top:14px}
+.steps{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px}
+.step{border:1px solid var(--line);border-radius:16px;padding:16px;background:var(--surface3)}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.95rem;margin-bottom:10px}
+.step h3{margin-bottom:6px}.step p{font-size:.9rem;color:var(--muted)}
+.step p strong{color:var(--ink)}
+.broll-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;margin-top:18px;align-items:start}
+.subcard{border:1px solid var(--line);border-radius:16px;padding:16px;background:var(--surface3)}
+.subcard h3{font-size:1.05rem}
+.shotrow{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.shotrow:last-child{border-bottom:0}
+.shotrow b{font-size:.94rem;display:block}.shotrow span{font-size:.8rem;color:var(--muted)}
+.chips{display:flex;gap:6px;flex-shrink:0}
+.chip{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 9px;font-size:.74rem;font-weight:800;cursor:pointer;min-width:38px}
+.chip.on{background:var(--accent2);color:#fff;border-color:var(--accent2)}
+.chip.still.on{background:var(--gold);border-color:var(--gold)}
+.plan{list-style:none;padding:0;margin:12px 0 0}
+.plan li{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:.92rem}
+.plan li:last-child{border-bottom:0}
+.plan time{font-weight:800;color:var(--accent2);min-width:74px;font-size:.85rem;padding-top:1px}
+.plan span{color:var(--muted)}.plan b{color:var(--ink)}
+.folder-tree{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.82rem;line-height:1.65;background:var(--ink);color:var(--bg);border-radius:14px;padding:16px;overflow-x:auto;white-space:pre;margin-top:12px}
+.folder-tree i{opacity:.65;font-style:normal}
+@media(max-width:820px){.hero,.grid,.weeks{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.tracker{grid-template-columns:repeat(5,1fr)}.shots,.focus{grid-template-columns:1fr}.wrap{padding:14px 14px 36px}.steps,.broll-grid{grid-template-columns:1fr}.shotrow{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <div class="eyebrow">Sir Rulz • 30-Day Mission</div>
+      <h1>Just start talking.<br><em style="color:var(--accent)">Reps build confidence.</em></h1>
+      <p class="lede">Your daily dashboard for getting genuinely good on camera — based on Gabe Harris’s beginner roadmap. No posting in Week 1. No perfection. One small fix at a time, every single day.</p>
+      <div class="flex mt">
+        <button class="btn" id="startBtn">Start Day 1 today</button>
+        <button class="btn secondary" id="resetBtn">Reset plan</button>
+        <span class="small" id="startLabel">Not started yet — Day 1 is waiting for you.</span>
+      </div>
+      <p class="small mt">Based on <a href="https://www.instagram.com/p/DfaEkgzCp5P/" target="_blank" rel="noopener">“The Ultimate Beginner’s Guide To Just F*cking Starting”</a> by Gabe Harris (<a href="https://www.instagram.com/watch.gabe/" target="_blank" rel="noopener">@watch.gabe</a>).</p>
+    </div>
+    <div class="hero-card">
+      <span>Your mantra for 30 days</span>
+      <b>“Done beats perfect.”</b>
+      <p style="opacity:.9">Record it. Watch it back. Pick <u>one</u> thing to improve tomorrow. That’s it. Confidence isn’t a feeling you wait for — it’s evidence you collect.</p>
+      <p style="opacity:.85;font-size:.9rem">Week 1 focus like Gabe’s: eye contact + cutting filler words (“um”, “like”, “you know”).</p>
+    </div>
+  </header>
+
+  <section class="stats" aria-label="Progress">
+    <div class="stat"><span>Current day</span><b id="statDay">Day 1</b><span id="statWeek">Week 1 • Getting Comfy</span></div>
+    <div class="stat"><span>Complete</span><b id="statPct">0%</b><div class="progress"><i id="progBar"></i></div></div>
+    <div class="stat"><span>Current streak</span><b id="statStreak">0 days</b><span>Consecutive days ticked off</span></div>
+    <div class="stat"><span>Ideas in your bank</span><b id="statIdeas">0</b><span>From AI interrogations</span></div>
+  </section>
+
+  <div class="grid">
+    <div>
+      <!-- TODAY -->
+      <section class="card today" id="todayCard">
+        <div class="today-head"><h2>☀️ Today’s task</h2><span class="pill" id="todayPill">DAY 1 • WEEK 1</span></div>
+        <div class="task-title" id="todayTitle">Record your first 10-minute rant</div>
+        <p class="task-desc" id="todayDesc"></p>
+        <ul class="checklist" id="todayList"></ul>
+        <label for="focusInput">🎯 My ONE thing to work on tomorrow</label>
+        <textarea id="focusInput" rows="2" placeholder="e.g. Look at the lens, not myself. Pause instead of saying ‘um’."></textarea>
+        <p class="small">Gabe’s rule: pick just one. Eye contact one day, filler words the next. Small fixes compound.</p>
+        <div class="flex mt"><button class="btn teal" id="completeToday">✓ Mark today complete</button><button class="btn secondary" id="saveFocus">Save my one thing</button><span class="small" id="saveMsg"></span></div>
+      </section>
+
+      <!-- TRACKER -->
+      <section class="card">
+        <div class="flex" style="justify-content:space-between"><h2>30-Day Tracker</h2><span class="pill teal">Tap a day to tick it off</span></div>
+        <p class="small">Your progress saves in this browser and stays here when you come back. Miss a day? No drama — just pick up the next one.</p>
+        <div class="tracker" id="tracker"></div>
+        <div class="flex mt"><span class="pill">Week 1: Days 1–7</span><span class="pill">Week 2: 8–14</span><span class="pill">Week 3: 15–21</span><span class="pill">Week 4: 22–30</span></div>
+      </section>
+
+      <!-- WEEKS -->
+      <section class="card">
+        <h2>The 4 weeks, exactly as Gabe lays it out</h2>
+        <div class="weeks mt">
+          <article class="week"><span class="pill">WEEK 1</span><h3 class="mt">Getting Comfy</h3><p>Record every day. Post nothing.</p><ul><li>Every morning: set up camera, record a 10-min unscripted rant — your daily video journal</li><li>Watch it back, pick 1 thing for tomorrow</li><li>Gabe’s focus: eye contact &amp; filler words</li></ul></article>
+          <article class="week"><span class="pill">WEEK 2</span><h3 class="mt">Comfy + AI Interviews</h3><p>Keep daily logs. Build your idea bank.</p><ul><li>2× AI interrogations / week</li><li>Topics: dream customer, business, method, experiences</li><li>End each session: “Give me my top 10 content ideas” — 2 sessions = 20 ideas</li></ul></article>
+          <article class="week"><span class="pill">WEEK 3</span><h3 class="mt">Interviews + B-Roll + Talking Head</h3><p>You’re building your vault.</p><ul><li>Continue 2× AI interviews</li><li>2× B-roll sequences / week — wide, medium, tight</li><li>3× talking-head videos from your AI topics</li><li>By Day 21: footage, ideas + 21 days of confidence</li></ul></article>
+          <article class="week"><span class="pill">WEEK 4</span><h3 class="mt">Go Live 🚀</h3><p>Now you publish — with a system behind you.</p><ul><li>Post 3× / week, every week until you can scale</li><li>Layer B-roll over talking-head footage</li><li>Keep: 2× AI convos, 1× batch recording, 1× B-roll / week</li><li>A compounding library, not random posts</li></ul></article>
+        </div>
+      </section>
+
+      <!-- B-ROLL + TALKING HEAD -->
+      <section class="card">
+        <h2>B-Roll shot list</h2><p class="small">Pick one everyday action — making coffee, opening your laptop, walking to your desk, writing notes — and shoot it three ways.</p>
+        <div class="shots mt">
+          <div class="shot wide"><b>WIDE</b><p>Whole scene. Where are you? Set the context.</p></div>
+          <div class="shot med"><b>MEDIUM</b><p>Waist-up / desk-level. The action itself.</p></div>
+          <div class="shot tight"><b>TIGHT</b><p>Hands, face, details. Texture and feeling.</p></div>
+        </div>
+        <p class="small mt"><strong>Try this week:</strong> Morning coffee • WeekendMVP desk setup • Whiteboard / notes • Walk &amp; talk • Typing &amp; shipping code</p>
+        <h3 class="mt" style="margin-top:20px">Talking-head filming checklist</h3>
+        <ul class="checklist">
+          <li>Camera at eye level, lens cleaned, look at the lens — not the preview</li>
+          <li>One idea per video, from your idea bank — say it in the first 5 seconds</li>
+          <li>Hook → point → example from building WeekendMVP → close</li>
+          <li>Pause instead of “um” — silence feels longer to you than to viewers</li>
+          <li>Record 2 takes max, keep the better one, move on</li>
+        </ul>
+      </section>
+    </div>
+
+    <div>
+      <!-- ROUTINE + TIMER -->
+      <section class="card">
+        <h2>Your daily 10-minute journal</h2>
+        <p class="small">Every morning in Weeks 1–2 (and as a warm-up after). Unscripted. Unposted. Just you and the lens.</p>
+        <ol style="margin:12px 0 0 18px;padding:0;font-size:.95rem">
+          <li>Prop phone/camera up — same spot each day helps</li><li>Hit record, talk for 10 minutes about anything: yesterday, WeekendMVP, what you’re learning</li><li>Watch it back once — no re-recording</li><li>Write your ONE thing for tomorrow below</li>
+        </ol>
+        <div class="timer" id="timerDisplay">10:00</div>
+        <div class="flex" style="justify-content:center"><button class="btn" id="timerStart">Start 10-min timer</button><button class="btn secondary" id="timerReset">Reset</button></div>
+        <div class="focus mt">
+          <div class="focus-box"><strong>👀 Eye contact</strong><p class="small">Tape a small dot next to the lens. Talk to one person — your future viewer — not “an audience”.</p></div>
+          <div class="focus-box"><strong>🔇 Filler words</strong><p class="small">Don’t try to be perfect. Just notice. A pause is powerful — use it where “um” wants to live.</p></div>
+        </div>
+      </section>
+
+      <!-- AI PROMPTS -->
+      <section class="card">
+        <h2>AI interrogation prompts</h2>
+        <p class="small">Open your AI in conversation / voice mode, paste a prompt, and let it interview <em>you</em>. Tailored for WeekendMVP.</p>
+        <div id="prompts" class="mt"></div>
+      </section>
+
+      <!-- WEEK 4 CADENCE -->
+      <section class="card">
+        <h2>Week 4 posting cadence</h2>
+        <p><strong>3 posts a week</strong> — e.g. Mon / Wed / Fri — every week until you can scale.</p>
+        <ul class="checklist">
+          <li><strong>Post 1:</strong> Talking-head lesson from building WeekendMVP</li>
+          <li><strong>Post 2:</strong> Talking-head + B-roll layered over it</li>
+          <li><strong>Post 3:</strong> Story / build-in-public update</li>
+          <li>Weekly rhythm: 2× AI convos • 1× batch record • 1× B-roll session</li>
+        </ul>
+      </section>
+
+      <!-- IDEA BANK -->
+      <section class="card">
+        <h2>💡 Idea bank &amp; notes</h2>
+        <p class="small">Every AI session should end with 10 ideas. Drop them here so Week 3 filming is easy.</p>
+        <label for="ideaInput">Add a content idea</label>
+        <input type="text" id="ideaInput" placeholder="e.g. Why I validate before I build anything"/>
+        <div class="flex mt"><button class="btn" id="addIdea">Add idea</button><span class="small" id="ideaCount"></span></div>
+        <div id="ideaList" class="mt"></div>
+        <label for="notesInput">General notes</label>
+        <textarea id="notesInput" rows="4" placeholder="What felt easier today? What still feels awkward? Wins, however small…"></textarea>
+        <button class="btn secondary mt" id="saveNotes">Save notes</button> <span class="small" id="notesMsg"></span>
+      </section>
+    </div>
+  </div>
+
+  <!-- B-ROLL IN ONE DAY — Gabe Harris second post -->
+  <section class="card broll-day" id="brollDay">
+    <div class="broll-top">
+      <div style="max-width:720px">
+        <span class="pill teal">NEW • B-ROLL SYSTEM • WEEK 3–4 POWER-UP</span>
+        <h2 class="broll-title">B-Roll in One Day</h2>
+        <p style="font-size:1.08rem;font-weight:700;margin:2px 0">How to film a month&rsquo;s worth of B-roll in one day</p>
+        <p class="small">By Gabe Harris (<a href="https://www.instagram.com/watch.gabe/" target="_blank" rel="noopener">@watch.gabe</a>) • 30 Oct 2026 • 7 slides • One focused filming day = a personal stock library you can reuse for a whole month of reels, carousels and shorts.</p>
+      </div>
+      <a class="btn teal" href="https://www.instagram.com/p/DfI0cSvoBYL/" target="_blank" rel="noopener" style="text-decoration:none">Watch the post ↗</a>
+    </div>
+    <div class="broll-quote">“How to film a month&rsquo;s worth of B-Roll in one day. If you want to build an ai-empowered content system optimized for quality, comment CHALLENGE to hop on my 30-day challenge wait list.” — caption, <a href="https://www.instagram.com/p/DfI0cSvoBYL/" target="_blank" rel="noopener">instagram.com/p/DfI0cSvoBYL</a></div>
+
+    <h3 class="mt" style="margin-top:22px">The six-step workflow — in order</h3>
+    <div class="steps">
+      <article class="step"><div class="step-num">1</div><h3>Start with a plan</h3><p>Make a list of <strong>repeatable, useful shots you can film in one space</strong>. Working at your desk, drinking coffee, reading or journaling, typing on a laptop, making tea, scrolling on your phone. Build a personal stock library from your real life — don&rsquo;t invent a fake day.</p></article>
+      <article class="step"><div class="step-num">2</div><h3>Shoot wide, medium &amp; tight</h3><p>Film <strong>every scene in 3 ways</strong>: close-ups add detail and curiosity, mid shots show emotion and action, wide shots set the scene. Combine all 3 for smoother edits and better flow.</p></article>
+      <article class="step"><div class="step-num">3</div><h3>Repeat the action</h3><p>Don&rsquo;t shoot everything from one angle. <strong>Break actions into steps and reshoot each step</strong> from multiple angles. Walking to your desk = 3–5 steps: pull out laptop, set it down, open it. Mix overhead, POV and low-angle so you can stitch a mini story in post.</p></article>
+      <article class="step"><div class="step-num">4</div><h3>Film your real life</h3><p>Turn everyday tasks into content gold: <strong>your routine</strong> (breakfast, journaling, workouts), <strong>your process</strong> (editing, brainstorming, behind the scenes), <strong>personal moments</strong> (books, meditation, slow mornings). Let people into your world — it builds trust fast.</p></article>
+      <article class="step"><div class="step-num">5</div><h3>Don&rsquo;t forget the stills</h3><p>You already have the angle set up — take an <strong>extra 60 seconds</strong>, set a self-timer and get a still of the same setup. That one habit keeps your carousels and thumbnails on-brand without a separate shoot.</p></article>
+      <article class="step"><div class="step-num">6</div><h3>Organise for reuse</h3><p>Build a <strong>content bank</strong> so you&rsquo;re never starting from scratch. Create labelled folders on your laptop or phone, back it up on external drives, and reuse clips across reels, carousels and shorts. Consistency gets easier when you&rsquo;ve already got the footage.</p></article>
+    </div>
+
+    <div class="broll-grid">
+      <div class="subcard">
+        <div class="flex" style="justify-content:space-between"><h3>✓ Your one-day shot list</h3><span class="pill" id="brollProgress">0 / 24 done</span></div>
+        <p class="small">Tap W / M / T as you film each size, and 📸 when you&rsquo;ve grabbed the still. Your ticks save with the rest of the dashboard in this browser.</p>
+        <div id="shotList"></div>
+        <div class="flex mt"><button class="btn secondary" id="resetBroll">Reset B-roll day</button><span class="small" id="brollMsg">18 clips + 6 stills = a month of cutaways.</span></div>
+        <p class="small mt"><strong>Per shot, remember Step 3:</strong> break it into steps and vary the angle — overhead for typing &amp; journaling, POV for scrolling &amp; making tea, low-angle for walking in / sitting down.</p>
+      </div>
+      <div>
+        <div class="subcard">
+          <h3>🗓️ One-day filming plan</h3>
+          <p class="small">One space, natural light, phone charged, tripod + self-timer ready. Stay in order — routine first while the light and energy are fresh.</p>
+          <ul class="plan">
+            <li><time>30 min</time><div><b>Plan &amp; set up</b><br><span>Write your 6 shots, tidy one space, set tripod positions for wide / medium / tight.</span></div></li>
+            <li><time>Block 1</time><div><b>Routine</b><br><span>Making tea, drinking coffee, reading / journaling — wide, medium, tight + still each.</span></div></li>
+            <li><time>Block 2</time><div><b>Desk &amp; process</b><br><span>Working at your desk and typing on a laptop. Repeat each action step-by-step: sit, open laptop, type, think, ship.</span></div></li>
+            <li><time>Block 3</time><div><b>Real life &amp; BTS</b><br><span>Scrolling on your phone, brainstorming / notes, behind-the-scenes of WeekendMVP. Different angles: overhead, POV, low.</span></div></li>
+            <li><time>20 min</time><div><b>Stills sweep</b><br><span>Revisit your best setups, self-timer on, one clean still per scene for carousels &amp; thumbnails.</span></div></li>
+            <li><time>30 min</time><div><b>Organise &amp; back up</b><br><span>File everything into the content bank below, rename clearly, back up — same day, while you remember what&rsquo;s what.</span></div></li>
+          </ul>
+        </div>
+        <div class="subcard mt">
+          <h3>🗂️ Content bank — folder structure</h3>
+          <p class="small">Create this once on your laptop / phone. File by scene first, size second — so in an edit you think “coffee, tight” and go straight to it.</p>
+          <div class="folder-tree">Content-Bank/
+├─ 01_Desk-Work/ <i>Wide · Medium · Tight · Stills</i>
+├─ 02_Coffee-and-Tea/ <i>Wide · Medium · Tight · Stills</i>
+├─ 03_Reading-Journaling/ <i>Wide · Medium · Tight · Stills</i>
+├─ 04_Typing-Laptop/ <i>Wide · Medium · Tight · Stills</i>
+├─ 05_Phone-Scrolling/ <i>Wide · Medium · Tight · Stills</i>
+├─ 06_Routine-and-BTS/ <i>Wide · Medium · Tight · Stills</i>
+├─ 07_Stills-Carousels-Thumbnails/
+└─ _BACKUP/ <i>copy to external drive</i></div>
+          <p class="small mt">Naming tip: <strong>2026-11_Coffee_Tight_01</strong> — date, scene, size, number. Reuse the same clips across reels, carousels and shorts; that reuse is the whole point.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    <strong>You don’t need confidence to start. You start to get confidence.</strong><br>
+    Plan by Gabe Harris — <a href="https://www.instagram.com/p/DfaEkgzCp5P/" target="_blank" rel="noopener">Instagram carousel DfaEkgzCp5P</a> • B-Roll in One Day — <a href="https://www.instagram.com/p/DfI0cSvoBYL/" target="_blank" rel="noopener">Instagram post DfI0cSvoBYL</a> • Dashboard built for Sir Rulz’s goal: speak confidently to camera &amp; make videos. Progress is saved only in this browser on this device.
+  </div>
+</div>
+
+<script>
+var KEY='speaking-camera-dashboard-v1';
+var state={startDate:null,done:{},focus:{},ideas:[],notes:'',broll:{}};
+try{var raw=localStorage.getItem(KEY); if(raw) state=Object.assign(state,JSON.parse(raw));}catch(e){}
+if(!state.broll) state.broll={};
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+function weekFor(d){return d<=7?1:d<=14?2:d<=21?3:4}
+function weekName(w){return ['','Getting Comfy','Comfy + AI Interviews','Interviews + B-Roll + Talking Head','Go Live'][w]}
+
+var dayTasks=[
+{t:"Record your first 10-minute rant",d:"Set up your camera this morning. Talk unscripted for 10 minutes — your day, your goals, WeekendMVP. Don't post it. Watch it back once.",c:["Camera set up in your regular spot","10 minutes recorded, unscripted","Watched back once","Picked ONE thing for tomorrow"]},
+{t:"Daily journal — rant #2",d:"Same again. Yesterday's ONE thing is today's only job. Everything else can be messy.",c:["10-min journal recorded","Worked on yesterday's one thing","Picked tomorrow's one thing"]},
+{t:"Daily journal — eye contact day",d:"Put a dot by the lens. Talk to ONE person through it. 10 minutes, no posting.",c:["Dot / marker by the lens","10 minutes recorded","Noticed where your eyes wander"]},
+{t:"Daily journal — filler word day",d:"Count your 'ums' on playback — just notice them. Replace one with a pause today.",c:["10 minutes recorded","Counted filler words on playback","Practised pausing instead"]},
+{t:"Daily journal — talk about WeekendMVP",d:"Rant for 10 minutes about why you're building WeekendMVP. Who is it for? Why does it matter?",c:["10 minutes on WeekendMVP","Watched back","One thing for tomorrow noted"]},
+{t:"Daily journal — your story",d:"Tell the camera how you got here — building in public, learning as you go. Unscripted, unposted.",c:["10 minutes recorded","No re-takes","One thing noted"]},
+{t:"Week 1 finale journal",d:"Seven days of reps done. Watch a bit of Day 1 vs today — notice the difference. Celebrate it.",c:["10 minutes recorded","Compared Day 1 vs Day 7","Wrote down what improved"]},
+{t:"Journal + first AI interrogation",d:"Daily log as usual, plus your first AI interview: dream customer. End by asking for your top 10 ideas — save them in the idea bank.",c:["10-min journal","AI interrogation #1: dream customer","10 ideas saved to idea bank"]},
+{t:"Daily journal",d:"Keep the streak warm. 10 minutes, watch back, one thing.",c:["10 minutes recorded","One thing noted"]},
+{t:"Daily journal",d:"Talk today about a problem indie founders have that WeekendMVP solves.",c:["10 minutes recorded","One thing noted"]},
+{t:"Journal + AI interrogation #2",d:"Second interview this week: your method — validation before building. End with top 10 ideas.",c:["10-min journal","AI interrogation #2: your method","10 more ideas saved"]},
+{t:"Daily journal",d:"Rant about a lesson you learned shipping something. Stories build connection.",c:["10 minutes recorded","One thing noted"]},
+{t:"Daily journal",d:"Two weeks of showing up. You're not a beginner at pressing record anymore.",c:["10 minutes recorded","Noticed one improvement this week"]},
+{t:"Week 2 review journal",d:"Review your idea bank — star your favourite 5 topics. You'll film some next week.",c:["Journal recorded","Idea bank reviewed","Top 5 topics picked"]},
+{t:"Talking head #1 + B-roll #1",d:"Film talking-head #1 from your idea bank. Then shoot B-roll sequence #1: one everyday action, wide / medium / tight.",c:["Talking head #1 recorded","B-roll: wide shot","B-roll: medium shot","B-roll: tight shot"]},
+{t:"AI interrogation #3",d:"Topic: your business — WeekendMVP, the validation-first platform. End with top 10 ideas.",c:["AI session done","10 ideas saved"]},
+{t:"Talking head #2",d:"Second talking-head from your AI topics. Hook in the first 5 seconds. Two takes max.",c:["Talking head #2 recorded","Hook in first 5 seconds","Kept best take"]},
+{t:"B-roll #2 + journal warm-up",d:"Shoot B-roll sequence #2 (different action). Quick journal warm-up first if it helps.",c:["B-roll wide / medium / tight","Filed footage in your vault"]},
+{t:"AI interrogation #4 + talking head #3",d:"Topic: your experiences — shipping & building in public. Then film talking-head #3.",c:["AI session done","Talking head #3 recorded","10 ideas saved"]},
+{t:"Vault review day",d:"Watch your Week 3 footage back. Note what B-roll would lift each talking-head.",c:["Reviewed all Week 3 footage","Matched B-roll to videos"]},
+{t:"Week 3 finale",d:"21 days of camera confidence. You now have footage, ideas and proof you can do this.",c:["Journal / reflection recorded","Vault organised","Ready for Week 4"]},
+{t:"GO LIVE — Post #1",d:"Publish post #1: a talking-head video. Breathe. It's live — that's the win today.",c:["Post #1 published","Shared without over-editing"]},
+{t:"AI convo + batch prep",d:"AI conversation to top up ideas. Plan this week's 3 posts in your idea bank / notes.",c:["AI convo done","3 posts planned"]},
+{t:"Post #2 — layer the B-roll",d:"Publish post #2 with your B-roll layered over talking-head footage.",c:["B-roll layered in edit","Post #2 published"]},
+{t:"Batch recording day",d:"Batch-record next week's talking-heads in one session while you're warm.",c:["Batch session done","Footage filed"]},
+{t:"Post #3",d:"Publish post #3 — a build-in-public story update from WeekendMVP.",c:["Post #3 published"]},
+{t:"B-roll sequence + review",d:"Shoot 1 fresh B-roll sequence. Review what's working in your posts — comments, watch time, how it felt.",c:["B-roll shot wide/medium/tight","Week reviewed in notes"]},
+{t:"Week 4 rhythm check",d:"You posted 3× this week. That cadence — 3×/week, 2 AI convos, 1 batch, 1 B-roll — is now your system.",c:["3 posts live this week","Next week planned"]},
+{t:"Keep the cadence — Post day",d:"Day 29: the plan becomes a habit. Record and post using your system.",c:["Recorded using Week 4 system","Posted"]},
+{t:"Day 30 — watch Day 1 again",d:"Play your Day 1 rant next to today's video. Look how far you've come. Then keep going — 3× a week, every week.",c:["Compared Day 1 vs Day 30","Wrote final reflection in notes","Next 30 days planned"]}
+];
+
+var prompts=[
+{t:"Dream customer — indie founders",p:"“Interrogate me about my dream customer: indie founders who have ideas but aren't sure what to build. Ask me one question at a time about their pains, fears and goals. At the end, give me my top 10 content ideas.”"},
+{t:"My business — WeekendMVP",p:"“Interrogate me about WeekendMVP, my validation-first build platform for indie founders. Dig into what it does, who it helps and why it's different. End with my top 10 content ideas.”"},
+{t:"My method — validation before building",p:"“Interrogate me about my method: validating an idea before building it. Ask about my steps, mistakes and beliefs. End with my top 10 content ideas.”"},
+{t:"My experiences — shipping in public",p:"“Interrogate me about my experiences shipping products and building in public — wins, failures, lessons. End with my top 10 content ideas I can film as talking-heads.”"}
+];
+
+var brollShots=[
+{id:"desk",t:"Working at your desk",s:"Your main WeekendMVP scene — process & behind the scenes"},
+{id:"coffee",t:"Drinking coffee",s:"Routine • slow morning energy"},
+{id:"reading",t:"Reading or journaling",s:"Routine • personal moment, overhead works well"},
+{id:"typing",t:"Typing on a laptop",s:"Process • break into sit / open / type steps"},
+{id:"tea",t:"Making tea",s:"Routine • POV + tight detail of pouring"},
+{id:"phone",t:"Scrolling on your phone",s:"Real life • POV over the shoulder"}
+];
+var brollSizes=[{k:"wide",l:"W"},{k:"med",l:"M"},{k:"tight",l:"T"},{k:"still",l:"📸"}];
+function renderBroll(){
+  var wrap=document.getElementById('shotList'); if(!wrap) return;
+  var total=brollShots.length*brollSizes.length, done=0;
+  Object.keys(state.broll||{}).forEach(function(k){if(state.broll[k]) done++;});
+  var prog=document.getElementById('brollProgress'); if(prog) prog.textContent=done+' / '+total+' done';
+  var msg=document.getElementById('brollMsg'); if(msg) msg.textContent=done===total?'Month of B-roll banked 🎉 Now file it & back it up.':(total-done)+' ticks left — 18 clips + 6 stills = a month of cutaways.';
+  wrap.innerHTML=brollShots.map(function(sh){
+    var chips=brollSizes.map(function(sz){
+      var key=sh.id+'-'+sz.k, on=state.broll[key];
+      return '<button class="chip'+(sz.k==='still'?' still':'')+(on?' on':'')+'" data-broll="'+key+'" aria-pressed="'+!!on+'" title="'+sz.k+'">'+sz.l+'</button>';
+    }).join('');
+    return '<div class="shotrow"><div><b>'+sh.t+'</b><span>'+sh.s+'</span></div><div class="chips">'+chips+'</div></div>';
+  }).join('');
+  wrap.querySelectorAll('[data-broll]').forEach(function(b){b.onclick=function(){var k=b.dataset.broll; state.broll[k]=!state.broll[k]; if(!state.broll[k]) delete state.broll[k]; save(); renderBroll();};});
+}
+function currentDay(){
+  if(!state.startDate) return 1;
+  var diff=Math.floor((new Date().setHours(0,0,0,0)-new Date(state.startDate).setHours(0,0,0,0))/86400000)+1;
+  return Math.max(1,Math.min(30,diff));
+}
+function render(){
+  var cd=currentDay(), w=weekFor(cd);
+  document.getElementById('statDay').textContent='Day '+cd;
+  document.getElementById('statWeek').textContent='Week '+w+' • '+weekName(w);
+  var doneCount=Object.keys(state.done).filter(function(k){return state.done[k]}).length;
+  var pct=Math.round(doneCount/30*100);
+  document.getElementById('statPct').textContent=pct+'%';
+  document.getElementById('progBar').style.width=pct+'%';
+  // streak: consecutive from day 1 up, plus current run ending at highest consecutive
+  var streak=0; for(var i=1;i<=30;i++){ if(state.done[i]) streak++; else break; }
+  // if started later, also show run ending at cd-1
+  document.getElementById('statStreak').textContent=streak+(streak===1?' day':' days');
+  document.getElementById('statIdeas').textContent=state.ideas.length;
+  document.getElementById('ideaCount').textContent=state.ideas.length+' ideas saved';
+  document.getElementById('startLabel').textContent=state.startDate?('Started '+new Date(state.startDate).toLocaleDateString(undefined,{weekday:'short',day:'numeric',month:'short'})+' — you are on Day '+cd):'Not started yet — Day 1 is waiting for you.';
+  // today
+  var t=dayTasks[cd-1];
+  document.getElementById('todayPill').textContent='DAY '+cd+' • WEEK '+w+' — '+weekName(w).toUpperCase();
+  document.getElementById('todayTitle').textContent=t.t;
+  document.getElementById('todayDesc').textContent=t.d;
+  document.getElementById('todayList').innerHTML=t.c.map(function(x){return '<li>'+x+'</li>'}).join('');
+  document.getElementById('focusInput').value=state.focus[cd]||'';
+  document.getElementById('completeToday').textContent=state.done[cd]?'✓ Day '+cd+' complete — tap to undo':'✓ Mark Day '+cd+' complete';
+  // tracker
+  var tr=document.getElementById('tracker'); tr.innerHTML='';
+  for(var d=1;d<=30;d++){ (function(d){
+    var el=document.createElement('button'); el.className='day'+(state.done[d]?' done':'')+(d===cd?' todayDay':'');
+    el.innerHTML=d+'<small>'+(state.done[d]?'Done ✓':'Wk '+weekFor(d))+'</small>';
+    el.onclick=function(){state.done[d]=!state.done[d]; save(); render();};
+    tr.appendChild(el);
+  })(d); }
+  // ideas
+  var il=document.getElementById('ideaList');
+  il.innerHTML=state.ideas.length? state.ideas.map(function(idea,i){return '<div class="idea"><span>💡 '+idea.replace(/</g,'&lt;')+'</span><button data-i="'+i+'">Remove</button></div>'}).join('') : '<p class="small">No ideas yet — your first AI interrogation in Week 2 will fill this up with 10 at a time.</p>';
+  il.querySelectorAll('button').forEach(function(b){b.onclick=function(){state.ideas.splice(+b.dataset.i,1);save();render();}});
+  document.getElementById('notesInput').value=state.notes||'';
+  renderBroll();
+}
+document.getElementById('prompts').innerHTML=prompts.map(function(pr,i){return '<div class="prompt"><strong>'+pr.t+'</strong><p>'+pr.p+'</p><button class="btn secondary" data-copy="'+i+'">Copy prompt</button></div>'}).join('');
+document.querySelectorAll('[data-copy]').forEach(function(b){b.onclick=function(){var txt=prompts[+b.dataset.copy].p; if(navigator.clipboard) navigator.clipboard.writeText(txt); b.textContent='Copied ✓'; setTimeout(function(){b.textContent='Copy prompt'},1500);};});
+
+document.getElementById('startBtn').onclick=function(){ if(!state.startDate){state.startDate=new Date().toISOString(); save();} render(); document.getElementById('todayCard').scrollIntoView({behavior:'smooth'}); };
+var resetArmed=false; document.getElementById('resetBtn').onclick=function(){ if(!resetArmed){resetArmed=true; this.textContent='Tap again to confirm reset'; setTimeout(function(){resetArmed=false; document.getElementById('resetBtn').textContent='Reset plan';},3000); return;} resetArmed=false; this.textContent='Reset plan'; state={startDate:null,done:{},focus:{},ideas:[],notes:'',broll:{}}; save(); render(); };
+document.getElementById('completeToday').onclick=function(){var cd=currentDay(); state.done[cd]=!state.done[cd]; save(); render();};
+document.getElementById('saveFocus').onclick=function(){var cd=currentDay(); state.focus[cd]=document.getElementById('focusInput').value; save(); document.getElementById('saveMsg').textContent='Saved ✓ That’s tomorrow’s only job.';};
+document.getElementById('addIdea').onclick=function(){var v=document.getElementById('ideaInput').value.trim(); if(!v) return; state.ideas.unshift(v); document.getElementById('ideaInput').value=''; save(); render();};
+document.getElementById('ideaInput').addEventListener('keydown',function(e){if(e.key==='Enter') document.getElementById('addIdea').click();});
+document.getElementById('saveNotes').onclick=function(){state.notes=document.getElementById('notesInput').value; save(); document.getElementById('notesMsg').textContent='Saved ✓';};
+var rb=document.getElementById('resetBroll'); if(rb){var rbArmed=false; rb.onclick=function(){ if(!rbArmed){rbArmed=true; rb.textContent='Tap again to confirm'; setTimeout(function(){rbArmed=false; rb.textContent='Reset B-roll day';},3000); return;} rbArmed=false; rb.textContent='Reset B-roll day'; state.broll={}; save(); renderBroll(); };}
+
+// Timer
+var secs=600, timerInt=null, disp=document.getElementById('timerDisplay');
+function showT(){disp.textContent=Math.floor(secs/60)+':'+String(secs%60).padStart(2,'0');}
+document.getElementById('timerStart').onclick=function(){
+  if(timerInt){clearInterval(timerInt); timerInt=null; this.textContent='Resume timer'; return;}
+  this.textContent='Pause';
+  timerInt=setInterval(function(){ if(secs>0){secs--; showT();} else {clearInterval(timerInt); timerInt=null; disp.textContent='Done 🎉 Watch it back, pick ONE thing.'; document.getElementById('timerStart').textContent='Start 10-min timer'; secs=600;} },1000);
+};
+document.getElementById('timerReset').onclick=function(){clearInterval(timerInt); timerInt=null; secs=600; showT(); document.getElementById('timerStart').textContent='Start 10-min timer';};
+render();
+</script>
+</body>
+</html>

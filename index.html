@@ -19,6 +19,15 @@
   :root{--bg:#131110;--surface:#1E1B19;--surface2:#2A2320;--surface3:#221E1B;--ink:#FFF7ED;--muted:#C4B5A5;--line:#3A332E;--accent:#FF7A45;--accent2:#2DD4BF;--accent-soft:#3D2317;--shadow:0 10px 30px rgba(0,0,0,.35)}
 }
 *{box-sizing:border-box} html{scroll-behavior:smooth}
+/* --- Overflow fix (2026-11-09): stop horizontal scroll --- */
+/* The Content-Bank folder tree has long unbreakable lines. Inside the
+   B-Roll grid its min-content width forced the grid wider than the screen
+   on phones (~100px overflow at 390px). Let grid children shrink so the
+   tree scrolls inside its own box instead of pushing the page wider. */
+html,body{overflow-x:clip}
+@supports not (overflow:clip){html,body{overflow-x:hidden}}
+.hero>*,.grid>*,.weeks>*,.steps>*,.broll-grid>*,.shots>*,.focus>*{min-width:0}
+@media(max-width:400px){.topnav-inner{padding:10px 12px;gap:10px}.topnav-progress{font-size:.75rem;padding:5px 8px}}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:"DM Sans",system-ui,sans-serif;line-height:1.55}
 a{color:var(--accent2);font-weight:700}
 h1,h2,h3{line-height:1.05;margin:0}
